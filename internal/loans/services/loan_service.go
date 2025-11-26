@@ -1,16 +1,17 @@
 package services
 
 import (
-	"librarymvc/internal/loans/models"
-	"time"
+	"errors"
 	bookService "librarymvc/internal/books/models"
+	"librarymvc/internal/loans/models"
 	userService "librarymvc/internal/users/models"
+	"time"
 )
 
 type LoanService struct {
 	loanRepository models.LoanRepository
-	bookService bookService.BookService
-	userService userService.UserService
+	bookService    bookService.BookService
+	userService    userService.UserService
 }
 
 func NewLoanService(
@@ -20,13 +21,13 @@ func NewLoanService(
 ) models.LoanService {
 	return &LoanService{
 		loanRepository: loanRepository,
-		bookService:   bookService,
-		userService:  userService,
+		bookService:    bookService,
+		userService:    userService,
 	}
 }
 
-func (l LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
-	book, err := l.booksService.GetBook(bookId)
+func (l *LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
+	book, err := l.bookService.GetBook(bookId)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +36,7 @@ func (l LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
 		return nil, errors.New("book is not available")
 	}
 
-	_, err = l.usersService.GetUser(userId)
+	_, err = l.userService.GetUser(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -50,12 +51,12 @@ func (l LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
 	}
 
 	loan := &models.Loan{
-		BookID: bookId,
-		UserID: userId,
+		BookID:     bookId,
+		UserID:     userId,
 		BorrowedAt: time.Now(),
-		Status:  "active",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Status:     "active",
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
 	}
 
 	err = l.loanRepository.CreateLoan(loan)
@@ -71,8 +72,7 @@ func (l LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
 	return loan, err
 }
 
-
-func (l LoanService) ReturnBook(loanId int64) error {
+func (l *LoanService) ReturnBook(loanId int64) error {
 	loan, err := l.loanRepository.GetLoan(loanId)
 	if err != nil {
 		return err
@@ -99,15 +99,14 @@ func (l LoanService) ReturnBook(loanId int64) error {
 	return l.bookService.UpdateBook(book.ID, book)
 }
 
-
-func (l LoanService) GetLoan(id int64) (*models.Loan, error) {
+func (l *LoanService) GetLoan(id int64) (*models.Loan, error) {
 	return l.loanRepository.GetLoan(id)
 }
 
-func (l LoanService) GetUserLoans(userId int64) ([]*models.Loan, error) {
+func (l *LoanService) GetUserLoans(userId int64) ([]*models.Loan, error) {
 	return l.loanRepository.GetActiveUserLoans(userId)
 }
 
-func (l LoanService) GetAllLoans() ([]*models.Loan, error) {
+func (l *LoanService) GetAllLoans() ([]*models.Loan, error) {
 	return l.loanRepository.GetAllLoans()
 }

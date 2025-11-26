@@ -1,0 +1,50 @@
+# Binários
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/bin/
+/dist/
+
+# Arquivos compilados
+*.a
+*.o
+
+# Arquivos temporários
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Diretórios de dependências
+vendor/
+
+# Arquivos de IDE
+.idea/
+.vscode/
+*.iml
+*.code-workspace
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# Arquivos de build
+/tmp/
+/build/
+
+# Arquivos de cobertura
+*.coverprofile
+coverage.html
+coverage.out
+
+# Arquivos específicos do Go
+go.work
+go.work.sum
+

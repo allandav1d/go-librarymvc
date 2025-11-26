@@ -4,6 +4,7 @@ import (
 	"librarymvc/internal/books/models"
 	"net/http"
 	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,8 +12,10 @@ type BooksController struct {
 	bookService models.BookService
 }
 
-func NewBooksController() *BooksController {
-	return &BooksController{}
+func NewBooksController(bookService models.BookService) *BooksController {
+	return &BooksController{
+		bookService: bookService,
+	}
 }
 
 func (b *BooksController) RegisterRoutes(r *gin.Engine) {
@@ -43,7 +46,6 @@ func (b *BooksController) CreateBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, book)
 }
 
-
 func (b *BooksController) GetBook(ctx *gin.Context) {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
@@ -67,7 +69,7 @@ func (b *BooksController) GetAllBooks(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, books)	
+	ctx.JSON(http.StatusOK, books)
 }
 
 func (b *BooksController) UpdateBook(ctx *gin.Context) {
@@ -92,7 +94,6 @@ func (b *BooksController) UpdateBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, nil)
 }
 
-
 func (b *BooksController) DeleteBook(ctx *gin.Context) {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
@@ -108,4 +109,3 @@ func (b *BooksController) DeleteBook(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, nil)
 }
-
