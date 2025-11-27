@@ -16,6 +16,7 @@ Sistema de biblioteca que permite gerenciar:
 - **Go** 1.24.3
 - **Gin** - Framework web para Go
 - **Gin Validator** - Validação de dados
+- **Tailwind CSS** - Framework CSS utility-first com design system shadcn-like
 - **Air** - Hot reload para desenvolvimento (opcional)
 
 ## 📁 Estrutura do Projeto
@@ -29,6 +30,20 @@ go-librarymvc/
 │   ├── books/               # Módulo de livros
 │   ├── loans/               # Módulo de empréstimos
 │   └── users/               # Módulo de usuários
+├── web/
+│   └── controller/          # Controllers web para templates
+├── templates/               # Templates HTML
+│   ├── layout.html
+│   ├── dashboard.html
+│   ├── books.html
+│   ├── users.html
+│   └── loans.html
+├── static/
+│   └── css/
+│       ├── input.css        # CSS Tailwind (source)
+│       └── output.css       # CSS compilado (gerado)
+├── .air.toml                # Configuração do Air
+├── tailwind.config.js       # Configuração do Tailwind
 ├── go.mod
 └── go.sum
 ```
@@ -73,7 +88,29 @@ Verifique a instalação:
 air -v
 ```
 
-4. Execute a aplicação:
+4. Configure o Tailwind CSS:
+
+Baixe o Tailwind CLI para macOS:
+```bash
+# Para macOS ARM (M1/M2/M3)
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64
+chmod +x tailwindcss-macos-arm64
+mv tailwindcss-macos-arm64 tailwindcss
+
+# Para macOS Intel
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-x64
+chmod +x tailwindcss-macos-x64
+mv tailwindcss-macos-x64 tailwindcss
+```
+
+Compile o CSS:
+```bash
+./tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify
+```
+
+> **Nota:** Se você usar o Air para desenvolvimento, o Tailwind CSS será compilado automaticamente antes de cada build.
+
+5. Execute a aplicação:
 
 **Modo de desenvolvimento (com hot reload):**
 ```bash
@@ -94,6 +131,35 @@ A aplicação possui rotas para:
 - Gerenciamento de usuários
 - Gerenciamento de livros
 - Gerenciamento de empréstimos
+
+## 🎨 Design System
+
+O projeto utiliza Tailwind CSS v4 com um design system inspirado no **shadcn/ui**, incluindo:
+
+### Componentes Estilizados
+- **Buttons**: `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-destructive`, `.btn-success`, `.btn-outline`, `.btn-ghost`
+- **Cards**: `.card` com suporte a hover effects e shadows
+- **Badges**: `.badge-success`, `.badge-warning`, `.badge-destructive`, `.badge-info`
+- **Forms**: `.form-input`, `.form-select`, `.form-label` com focus states
+- **Alerts**: `.alert-success`, `.alert-destructive`, `.alert-warning`, `.alert-info`
+
+### Paleta de Cores (HSL)
+- **Primary**: `hsl(222.2 47.4% 11.2%)`
+- **Secondary**: `hsl(210 40% 96.1%)`
+- **Destructive**: `hsl(0 84.2% 60.2%)`
+- **Success**: `hsl(142.1 76.2% 36.3%)`
+- **Warning**: `hsl(38 92% 50%)`
+- **Info**: `hsl(199 89% 48%)`
+
+### Responsividade
+O design é totalmente responsivo com breakpoints:
+- `sm`: 640px
+- `md`: 768px
+- `lg`: 1024px
+
+Para customizar o design, edite:
+- `static/css/input.css` - Componentes e estilos customizados
+- `tailwind.config.js` - Configuração do Tailwind
 
 ## 🎓 Curso
 

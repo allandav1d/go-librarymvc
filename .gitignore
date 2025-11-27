@@ -53,3 +53,8 @@ tmp/
 build-errors.log
 main
 
+# Tailwind CSS
+tailwindcss
+tailwindcss-*
+static/css/output.css
+

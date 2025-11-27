@@ -61,6 +61,9 @@ func (wc *WebController) RegisterRoutes(r *gin.Engine) {
 	// Configurar templates
 	r.LoadHTMLGlob("templates/*.html")
 
+	// Servir arquivos estáticos
+	r.Static("/static", "./static")
+
 	// Rotas principais
 	r.GET("/", wc.Dashboard)
 	r.GET("/books", wc.BooksList)
