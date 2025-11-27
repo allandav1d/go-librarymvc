@@ -16,6 +16,7 @@ Sistema de biblioteca que permite gerenciar:
 - **Go** 1.24.3
 - **Gin** - Framework web para Go
 - **Gin Validator** - Validação de dados
+- **Air** - Hot reload para desenvolvimento (opcional)
 
 ## 📁 Estrutura do Projeto
 
@@ -51,7 +52,36 @@ cd go-librarymvc
 go mod download
 ```
 
-3. Execute a aplicação:
+3. (Opcional) Instale o Air para desenvolvimento com hot reload:
+```bash
+go install github.com/air-verse/air@latest
+```
+
+Adicione o Go bin ao seu PATH (se ainda não estiver configurado):
+```bash
+# Para ZSH (macOS padrão)
+echo 'export PATH="$HOME/go/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# Para Bash
+echo 'export PATH="$HOME/go/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Verifique a instalação:
+```bash
+air -v
+```
+
+4. Execute a aplicação:
+
+**Modo de desenvolvimento (com hot reload):**
+```bash
+air
+```
+> O Air irá monitorar mudanças nos arquivos `.go` e `.html` e automaticamente reconstruir e reiniciar a aplicação.
+
+**Modo normal:**
 ```bash
 go run cmd/api/main.go
 ```

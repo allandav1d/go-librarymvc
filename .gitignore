@@ -48,3 +48,8 @@ coverage.out
 go.work
 go.work.sum
 
+# Air hot reload artifacts
+tmp/
+build-errors.log
+main
+
