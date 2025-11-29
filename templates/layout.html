@@ -1,6 +1,6 @@
 {{define "layout"}}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -9,58 +9,174 @@
     {{template "styles" .}}
 </head>
 
-<body class="p-4 sm:p-6 md:p-8">
-    <div class="mx-auto max-w-7xl bg-white rounded-xl shadow-2xl overflow-hidden">
-
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-6 py-5">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl sm:text-3xl font-light">📚 Sistema de Biblioteca</h1>
-                <span class="text-sm opacity-80 hidden sm:inline">API: http://localhost:8080</span>
+<body class="flex h-screen overflow-hidden bg-white dark:bg-gray-950">
+    <!-- Sidebar -->
+    <div class="w-64 flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
+        <!-- Logo -->
+        <div class="p-6 border-b border-gray-200 dark:border-gray-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="book-open" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-gray-900 dark:text-white font-semibold text-sm">Sistema de Biblioteca</h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs">v1.0.0</p>
+                </div>
             </div>
         </div>
 
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <a href="/" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {{if eq .ActiveSection "dashboard"}}bg-gray-100 dark:bg-gray-800 border-l-3 border-blue-600{{end}}">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            <a href="/books" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {{if eq .ActiveSection "books"}}bg-gray-100 dark:bg-gray-800 border-l-3 border-blue-600{{end}}">
+                <i data-lucide="book" class="w-5 h-5"></i>
+                <span class="text-sm">Livros</span>
+            </a>
+            <a href="/users" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {{if eq .ActiveSection "users"}}bg-gray-100 dark:bg-gray-800 border-l-3 border-blue-600{{end}}">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span class="text-sm">Usuários</span>
+            </a>
+            <a href="/loans" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {{if eq .ActiveSection "loans"}}bg-gray-100 dark:bg-gray-800 border-l-3 border-blue-600{{end}}">
+                <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                <span class="text-sm">Empréstimos</span>
+            </a>
+        </nav>
+
+        <!-- Bottom Section -->
+        <div class="p-3 border-t border-gray-200 dark:border-gray-800">
+            <!-- User Menu -->
+            <div class="relative">
+                <button onclick="toggleUserMenu()" class="w-full px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">AD</span>
+                        </div>
+                        <div class="flex-1 min-w-0 text-left">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">Admin</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">admin@biblioteca.com</p>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+                    </div>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="userDropdown" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden">
+                    <div class="py-1">
+                        <a href="#" class="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                            <span>Perfil</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <hr class="my-1 border-gray-200 dark:border-gray-700">
+                        <button onclick="toggleTheme(); event.stopPropagation();" class="w-full flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                            <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                            <span>Alternar Tema</span>
+                        </button>
+                        <hr class="my-1 border-gray-200 dark:border-gray-700">
+                        <a href="/logout" class="flex items-center space-x-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Flash Message -->
         {{if .FlashMessage}}
-        <div class="flash-animate px-6 py-4 border-b {{if eq .FlashType "success"}}alert-success{{else if eq .FlashType "error"}}alert-destructive{{else if eq .FlashType "warning"}}alert-warning{{else}}alert-info{{end}}">
+        <div class="flash-animate px-6 py-4 {{if eq .FlashType "success"}}bg-green-50 dark:bg-green-900 border-green-500 text-green-900 dark:text-green-100{{else if eq .FlashType "error"}}bg-red-50 dark:bg-red-900 border-red-500 text-red-900 dark:text-red-100{{else if eq .FlashType "warning"}}bg-yellow-50 dark:bg-yellow-900 border-yellow-500 text-yellow-900 dark:text-yellow-100{{else}}bg-blue-50 dark:bg-blue-900 border-blue-500 text-blue-900 dark:text-blue-100{{end}} border-l-4">
             {{.FlashMessage}}
         </div>
         {{end}}
 
-        <!-- Navigation Tabs -->
-        <div class="flex flex-col sm:flex-row bg-slate-50 border-b border-slate-200">
-            <a href="/" class="px-6 py-4 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors border-b-2 {{if eq .ActiveSection "dashboard"}}border-blue-500 bg-white text-slate-900{{else}}border-transparent{{end}}">
-                <span class="text-sm sm:text-base">📊 Dashboard</span>
-            </a>
-            <a href="/books" class="px-6 py-4 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors border-b-2 {{if eq .ActiveSection "books"}}border-blue-500 bg-white text-slate-900{{else}}border-transparent{{end}}">
-                <span class="text-sm sm:text-base">📖 Livros</span>
-            </a>
-            <a href="/users" class="px-6 py-4 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors border-b-2 {{if eq .ActiveSection "users"}}border-blue-500 bg-white text-slate-900{{else}}border-transparent{{end}}">
-                <span class="text-sm sm:text-base">👥 Usuários</span>
-            </a>
-            <a href="/loans" class="px-6 py-4 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors border-b-2 {{if eq .ActiveSection "loans"}}border-blue-500 bg-white text-slate-900{{else}}border-transparent{{end}}">
-                <span class="text-sm sm:text-base">🔄 Empréstimos</span>
-            </a>
-        </div>
-
         <!-- Content Area -->
-        <div class="p-6 sm:p-8">
-            {{if eq .ActiveSection "dashboard"}}
-            {{template "dashboard" .}}
-            {{else if eq .ActiveSection "books"}}
-            {{template "books" .}}
-            {{else if eq .ActiveSection "users"}}
-            {{template "users" .}}
-            {{else if eq .ActiveSection "loans"}}
-            {{template "loans" .}}
-            {{else}}
-            {{template "dashboard" .}}
-            {{end}}
+        <div class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950">
+            <div class="max-w-7xl mx-auto p-6 sm:p-8">
+                {{if eq .ActiveSection "dashboard"}}
+                {{template "dashboard" .}}
+                {{else if eq .ActiveSection "books"}}
+                {{template "books" .}}
+                {{else if eq .ActiveSection "users"}}
+                {{template "users" .}}
+                {{else if eq .ActiveSection "loans"}}
+                {{template "loans" .}}
+                {{else}}
+                {{template "dashboard" .}}
+                {{end}}
+            </div>
         </div>
     </div>
 
     <!-- Modals -->
     {{template "modals" .}}
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Theme Toggle Function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+
+            // Reinitialize icons after theme change
+            setTimeout(() => lucide.createIcons(), 100);
+
+            // Close dropdown after changing theme
+            setTimeout(() => {
+                const dropdown = document.getElementById('userDropdown');
+                dropdown.classList.add('hidden');
+            }, 150);
+        }
+
+        // User Menu Dropdown Toggle
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = event.target.closest('[onclick="toggleUserMenu()"]');
+            const dropdown = document.getElementById('userDropdown');
+
+            if (!userMenu && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Load theme from localStorage on page load
+        (function() {
+            const theme = localStorage.getItem('theme');
+            const html = document.documentElement;
+
+            if (theme === 'light') {
+                html.classList.remove('dark');
+            } else if (theme === 'dark') {
+                html.classList.add('dark');
+            }
+            // If no preference, default to dark (already set in HTML)
+        })();
+    </script>
 </body>
 
 </html>

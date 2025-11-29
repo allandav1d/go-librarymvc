@@ -88,6 +88,19 @@ Verifique a instalação:
 air -v
 ```
 
+**Alternativa: Criar um alias para o Air**
+
+Se preferir usar um alias ao invés de adicionar ao PATH:
+```bash
+# Para ZSH (macOS padrão)
+echo 'alias air="$HOME/go/bin/air"' >> ~/.zshrc
+source ~/.zshrc
+
+# Para Bash
+echo 'alias air="$HOME/go/bin/air"' >> ~/.bashrc
+source ~/.bashrc
+```
+
 4. Configure o Tailwind CSS:
 
 Baixe o Tailwind CLI para macOS:
@@ -101,6 +114,17 @@ mv tailwindcss-macos-arm64 tailwindcss
 curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-x64
 chmod +x tailwindcss-macos-x64
 mv tailwindcss-macos-x64 tailwindcss
+
+# Para Ubuntu/Linux
+# Para Linux ARM64
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-arm64
+chmod +x tailwindcss-linux-arm64
+mv tailwindcss-linux-arm64 tailwindcss
+
+# Para Linux x64
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+chmod +x tailwindcss-linux-x64
+mv tailwindcss-linux-x64 tailwindcss
 ```
 
 Compile o CSS:

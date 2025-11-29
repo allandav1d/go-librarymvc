@@ -1,18 +1,13 @@
 {{define "styles"}}
 <link rel="stylesheet" href="/static/css/output.css">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-    /* Additional custom styles for gradients and animations */
+    /* Base Styles */
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
         font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .stat-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-
+    /* Animations */
     @keyframes slideDown {
         from {
             transform: translateY(-100%);
@@ -26,6 +21,131 @@
 
     .flash-animate {
         animation: slideDown 0.3s ease-out;
+    }
+
+    /* Stat Card Gradient */
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    /* Professional Card Styles */
+    .card {
+        @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 dark:shadow-none rounded-xl p-6 shadow-sm transition-all duration-200;
+    }
+
+    .card:hover {
+        @apply border-gray-300 dark:border-gray-600 shadow-md;
+    }
+
+    .card-header {
+        @apply flex justify-between items-center mb-4 pb-4 border-b border-gray-200 dark:border-gray-700;
+    }
+
+    .card-title {
+        @apply text-lg font-semibold text-gray-900 dark:text-gray-100;
+    }
+
+    .card-status {
+        @apply px-3 py-1 rounded-full text-xs font-medium;
+    }
+
+    .status-active {
+        @apply bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200;
+    }
+
+    .status-returned {
+        @apply bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200;
+    }
+
+    /* Section Styles */
+    .section-header {
+        @apply flex justify-between items-center mb-8 pb-4 border-b border-gray-200 dark:border-gray-700;
+    }
+
+    .section-title {
+        @apply text-3xl font-bold text-gray-900 dark:text-gray-100;
+    }
+
+    /* Professional Button Styles */
+    .btn {
+        @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium border-0 cursor-pointer transition-all duration-200 no-underline gap-2;
+    }
+
+    .btn:disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+
+    .btn-sm {
+        @apply px-3.5 py-1.5 text-xs;
+    }
+
+    .btn-primary {
+        @apply bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg;
+    }
+
+    .btn-success {
+        @apply bg-green-600 text-white hover:bg-green-700 hover:shadow-lg;
+    }
+
+    .btn-danger {
+        @apply bg-red-600 text-white hover:bg-red-700 hover:shadow-lg;
+    }
+
+    .btn-secondary {
+        @apply bg-gray-600 dark:bg-gray-700 text-white hover:bg-gray-700 dark:hover:bg-gray-600 hover:shadow-lg;
+    }
+
+    /* Professional Form Styles */
+    .form-group {
+        @apply mb-5;
+    }
+
+    .form-label {
+        @apply block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        @apply w-full px-3.5 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 text-sm transition-all duration-200;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        @apply outline-none border-blue-500 ring-4 ring-blue-500/10 bg-white dark:bg-gray-700;
+    }
+
+    .form-input::placeholder {
+        @apply text-gray-400 dark:text-gray-500;
+    }
+
+    /* Grid System */
+    .grid {
+        @apply grid gap-6;
+    }
+
+    .grid-3 {
+        @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+    }
+
+    /* Actions Container */
+    .actions {
+        @apply flex gap-3 flex-wrap mt-4;
+    }
+
+    /* Typography */
+    h2, h3 {
+        @apply text-gray-900 dark:text-gray-100;
+    }
+
+    p {
+        @apply text-gray-700 dark:text-gray-300 leading-relaxed;
+    }
+
+    strong {
+        @apply text-gray-900 dark:text-gray-100 font-semibold;
     }
 </style>
 {{end}}
