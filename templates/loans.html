@@ -35,15 +35,20 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Empréstimo #{{.ID}}</h3>
-                <span class="card-status {{if eq .Status " active"}}status-active{{else}}status-returned{{end}}">
+                <span class="card-status {{if eq .Status "active"}}status-active{{else}}status-returned{{end}}">
                     {{if eq .Status "active"}}Ativo{{else}}Devolvido{{end}}
                 </span>
             </div>
             <p><strong>Livro ID:</strong> {{.BookID}}</p>
             <p><strong>Usuário ID:</strong> {{.UserID}}</p>
             <p><strong>Data do Empréstimo:</strong> {{.BorrowedAt.Format "02/01/2006 15:04"}}</p>
-            {{if .ReturnedAt}}
+            {{if eq .Status "returned"}}
             <p><strong>Data da Devolução:</strong> {{.ReturnedAt.Format "02/01/2006 15:04"}}</p>
+            {{if gt .Fine 0}}
+            <p><strong>Multa:</strong> R$ {{printf "%.2f" .Fine}}</p>
+            {{end}}
+            {{else}}
+            <p><strong>Data Prevista de Devolução:</strong> {{.DueDate.Format "02/01/2006 15:04"}}</p>
             {{end}}
             <div class="actions">
                 {{if eq .Status "active"}}

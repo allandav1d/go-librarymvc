@@ -8,7 +8,7 @@
             <span class="close" onclick="closeModal('addBookModal')">&times;</span>
         </div>
         <div class="modal-body">
-            <form method="POST" action="/books">
+            <form method="POST" action="/books" id="addBookForm">
                 <div class="space-y-4">
                     <div>
                         <label class="form-label block mb-2">Título</label>
@@ -19,8 +19,24 @@
                         <input type="text" class="form-input" name="author" placeholder="Digite o nome do autor" required>
                     </div>
                     <div>
+                        <label class="form-label block mb-2">Tipo de Livro</label>
+                        <select class="form-select" name="book_type" id="bookTypeSelect" onchange="toggleLoanDuration()" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="emprestavel">Emprestável</option>
+                            <option value="referencia">Referência (não pode ser emprestado)</option>
+                        </select>
+                    </div>
+                    <div id="loanDurationDiv" style="display: none;">
+                        <label class="form-label block mb-2">Prazo de Empréstimo</label>
+                        <select class="form-select" name="loan_duration" id="loanDurationSelect">
+                            <option value="6">6 dias</option>
+                            <option value="12">12 dias</option>
+                            <option value="30">1 mês (30 dias)</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="form-label block mb-2">Quantidade</label>
-                        <input type="number" class="form-input" name="quantity" placeholder="Número de exemplares" min="1" required>
+                        <input type="number" class="form-input" name="quantity" placeholder="Número de exemplares" min="0" required>
                     </div>
                     <div class="flex gap-3 justify-end pt-4">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('addBookModal')">Cancelar</button>
@@ -84,8 +100,8 @@
                         <select class="form-select" name="book_id" required>
                             <option value="">Selecione um livro</option>
                             {{range .Books}}
-                            {{if gt .Quantity 0}}
-                            <option value="{{.ID}}">{{.Title}} - {{.Author}}</option>
+                            {{if and (gt .Quantity 0) (eq .BookType "emprestavel")}}
+                            <option value="{{.ID}}">{{.Title}} - {{.Author}} ({{.LoanDuration}} dias)</option>
                             {{end}}
                             {{end}}
                         </select>
@@ -137,5 +153,21 @@
             });
         }
     });
+
+    // Toggle loan duration field based on book type
+    function toggleLoanDuration() {
+        const bookType = document.getElementById('bookTypeSelect').value;
+        const loanDurationDiv = document.getElementById('loanDurationDiv');
+        const loanDurationSelect = document.getElementById('loanDurationSelect');
+
+        if (bookType === 'emprestavel') {
+            loanDurationDiv.style.display = 'block';
+            loanDurationSelect.required = true;
+        } else {
+            loanDurationDiv.style.display = 'none';
+            loanDurationSelect.required = false;
+            loanDurationSelect.value = '0'; // Set to 0 for reference books
+        }
+    }
 </script>
 {{end}}

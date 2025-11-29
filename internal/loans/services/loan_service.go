@@ -32,6 +32,11 @@ func (l *LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
 		return nil, err
 	}
 
+	// Check if book can be borrowed
+	if book.BookType == "referencia" {
+		return nil, errors.New("livro de referência não pode ser emprestado - deve permanecer na biblioteca")
+	}
+
 	if book.Quantity <= 0 {
 		return nil, errors.New("book is not available")
 	}
@@ -50,13 +55,19 @@ func (l *LoanService) CreateLoan(bookId, userId int64) (*models.Loan, error) {
 		return nil, errors.New("user has active loans")
 	}
 
+	// Calculate due date based on book's loan duration
+	now := time.Now()
+	dueDate := now.AddDate(0, 0, book.LoanDuration)
+
 	loan := &models.Loan{
 		BookID:     bookId,
 		UserID:     userId,
-		BorrowedAt: time.Now(),
+		BorrowedAt: now,
+		DueDate:    dueDate,
+		Fine:       0,
 		Status:     "active",
-		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
+		CreatedAt:  now,
+		UpdatedAt:  now,
 	}
 
 	err = l.loanRepository.CreateLoan(loan)
@@ -82,9 +93,18 @@ func (l *LoanService) ReturnBook(loanId int64) error {
 		return errors.New("book already returned")
 	}
 
+	now := time.Now()
 	loan.Status = "returned"
-	loan.UpdatedAt = time.Now()
-	loan.ReturnedAt = time.Now()
+	loan.UpdatedAt = now
+	loan.ReturnedAt = now
+
+	// Calculate fine if overdue (R$ 2.00 per day)
+	if now.After(loan.DueDate) {
+		daysLate := int(now.Sub(loan.DueDate).Hours() / 24)
+		if daysLate > 0 {
+			loan.Fine = float64(daysLate) * 2.00 // R$ 2.00 por dia de atraso
+		}
+	}
 
 	if err := l.loanRepository.UpdateLoan(loan); err != nil {
 		return err
@@ -97,6 +117,22 @@ func (l *LoanService) ReturnBook(loanId int64) error {
 
 	book.Quantity++
 	return l.bookService.UpdateBook(book.ID, book)
+}
+
+// CalculateFine calculates the fine for a given loan
+func (l *LoanService) CalculateFine(loan *models.Loan) float64 {
+	if loan.Status == "returned" {
+		return loan.Fine
+	}
+
+	now := time.Now()
+	if now.After(loan.DueDate) {
+		daysLate := int(now.Sub(loan.DueDate).Hours() / 24)
+		if daysLate > 0 {
+			return float64(daysLate) * 2.00
+		}
+	}
+	return 0
 }
 
 func (l *LoanService) GetLoan(id int64) (*models.Loan, error) {

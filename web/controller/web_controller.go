@@ -268,10 +268,15 @@ func (wc *WebController) BookUpdate(c *gin.Context) {
 	}
 
 	quantity, _ := strconv.Atoi(c.PostForm("quantity"))
+	loanDuration, _ := strconv.Atoi(c.PostForm("loan_duration"))
+	bookType := c.PostForm("book_type")
+
 	book := &bookModel.Book{
-		Title:    c.PostForm("title"),
-		Author:   c.PostForm("author"),
-		Quantity: quantity,
+		Title:        c.PostForm("title"),
+		Author:       c.PostForm("author"),
+		Quantity:     quantity,
+		BookType:     bookType,
+		LoanDuration: loanDuration,
 	}
 
 	err = wc.bookService.UpdateBook(id, book)
@@ -305,10 +310,15 @@ func (wc *WebController) BookDelete(c *gin.Context) {
 
 func (wc *WebController) BookCreate(c *gin.Context) {
 	quantity, _ := strconv.Atoi(c.PostForm("quantity"))
+	loanDuration, _ := strconv.Atoi(c.PostForm("loan_duration"))
+	bookType := c.PostForm("book_type")
+
 	book := &bookModel.Book{
-		Title:    c.PostForm("title"),
-		Author:   c.PostForm("author"),
-		Quantity: quantity,
+		Title:        c.PostForm("title"),
+		Author:       c.PostForm("author"),
+		Quantity:     quantity,
+		BookType:     bookType,
+		LoanDuration: loanDuration,
 	}
 
 	err := wc.bookService.CreateBook(book)
@@ -518,6 +528,17 @@ func (wc *WebController) LoansList(c *gin.Context) {
 		loans = []*loanModel.Loan{}
 	}
 
+	// Load users and books for the modal
+	users, err := wc.userService.GetAllUsers()
+	if err != nil {
+		users = []*userModel.User{}
+	}
+
+	books, err := wc.bookService.GetAllBooks()
+	if err != nil {
+		books = []*bookModel.Book{}
+	}
+
 	message, flashType := wc.getFlash(c)
 
 	data := PageData{
@@ -526,6 +547,8 @@ func (wc *WebController) LoansList(c *gin.Context) {
 		FlashMessage:  message,
 		FlashType:     flashType,
 		Loans:         loans,
+		Users:         users,
+		Books:         books,
 	}
 
 	wc.renderTemplate(c, "loans", data)
@@ -558,6 +581,17 @@ func (wc *WebController) LoansSearch(c *gin.Context) {
 		filtered = append(filtered, loan)
 	}
 
+	// Load users and books for the modal
+	users, err := wc.userService.GetAllUsers()
+	if err != nil {
+		users = []*userModel.User{}
+	}
+
+	books, err := wc.bookService.GetAllBooks()
+	if err != nil {
+		books = []*bookModel.Book{}
+	}
+
 	message, flashType := wc.getFlash(c)
 
 	data := PageData{
@@ -566,6 +600,8 @@ func (wc *WebController) LoansSearch(c *gin.Context) {
 		FlashMessage:  message,
 		FlashType:     flashType,
 		Loans:         filtered,
+		Users:         users,
+		Books:         books,
 		SearchQuery:   query,
 		StatusFilter:  statusFilter,
 	}
